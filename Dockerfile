@@ -4,7 +4,7 @@ FROM mostalive/ubuntu-14.04-oracle-jdk8
 # https://github.com/kaij/cantaloupe
 # https://github.com/MITLibraries/docker-cantaloupe
 
-ENV CANTALOUPE_VERSION 3.3.2
+ENV CANTALOUPE_VERSION 3.4.1
 EXPOSE 8182
 
 # Update packages and install tools
