@@ -43,4 +43,4 @@ RUN mkdir -p /var/log/cantaloupe \
  && chown cantaloupe /etc/cantaloupe.properties
 
 USER cantaloupe
-CMD ["sh", "-c", "java -Dcantaloupe.config=/etc/cantaloupe.properties -Daws.accessKeyId=$AWS_ACCESS_KEY_ID -Daws.secretKey=$AWS_SECRET_ACCESS_KEY -Xmx2g -jar /usr/local/cantaloupe/Cantaloupe-$CANTALOUPE_VERSION.war"]
+CMD ["sh", "-c", "java -Dcantaloupe.config=/etc/cantaloupe.properties -Daws.accessKeyId=$AWS_ACCESS_KEY_ID -Daws.secretKey=$AWS_SECRET_ACCESS_KEY -Xmx500m -jar /usr/local/cantaloupe/Cantaloupe-$CANTALOUPE_VERSION.war"]
