@@ -36,11 +36,11 @@ RUN curl -OL https://github.com/medusa-project/cantaloupe/releases/download/v$CA
  && rm /tmp/Cantaloupe-$CANTALOUPE_VERSION.zip
 
 COPY cantaloupe.properties /etc/cantaloupe.properties
-RUN mkdir -p /var/log/cantaloupe
-RUN mkdir -p /var/cache/cantaloupe
-RUN chown -R cantaloupe /var/log/cantaloupe
-RUN chown -R cantaloupe /var/cache/cantaloupe 
-RUN chown cantaloupe /etc/cantaloupe.properties
+RUN mkdir -p /var/log/cantaloupe \
+ && mkdir -p /var/cache/cantaloupe \
+ && chown -R cantaloupe /var/log/cantaloupe \
+ && chown -R cantaloupe /var/cache/cantaloupe \
+ && chown cantaloupe /etc/cantaloupe.properties
 
 USER cantaloupe
-CMD ["sh", "-c", "java -Dcantaloupe.config=/etc/cantaloupe.properties -Daws.accessKeyId=$AWS_ACCESS_KEY_ID -Daws.secretKey=$AWS_SECRET_ACCESS_KEY -Xmx2g -jar /usr/local/cantaloupe/Cantaloupe-$CANTALOUPE_VERSION.war"]
+CMD ["sh", "-c", "java -Dcantaloupe.config=/etc/cantaloupe.properties -Daws.accessKeyId=$AWS_ACCESS_KEY_ID -Daws.secretKey=$AWS_SECRET_ACCESS_KEY -Xmx500m -jar /usr/local/cantaloupe/Cantaloupe-$CANTALOUPE_VERSION.war"]
