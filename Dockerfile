@@ -42,5 +42,19 @@ RUN mkdir -p /var/log/cantaloupe \
  && chown -R cantaloupe /var/cache/cantaloupe \
  && chown cantaloupe /etc/cantaloupe.properties
 
+RUN mkdir -p /usr/local/jmx_monitor
+COPY lib/jmx-monitor-1.0.jar /usr/local/jmx_monitor
+COPY lib/checkMemory.sh /usr/local/jmx_monitor
+RUN chmod 755 /usr/local/jmx_monitor/checkMemory.sh
+RUN mkdir /var/log/jmx && chown cantaloupe /var/log/jmx
+RUN echo "* * * * * /usr/local/jmx_monitor/checkMemory.sh >> /var/log/jmx/memory.log" > /tmp/cantaloupe_crontab
+RUN crontab -u cantaloupe /tmp/cantaloupe_crontab
+
+COPY startup.sh /usr/local/
+RUN export CANTALOUPE_VERSION=$CANTALOUPE_VERSION
+RUN chmod 755 /usr/local/startup.sh
+
+RUN echo 'cantaloupe ALL=(ALL) NOPASSWD: /usr/sbin/cron' >> /etc/sudoers
+
 USER cantaloupe
-CMD ["sh", "-c", "java -Dcantaloupe.config=/etc/cantaloupe.properties -Daws.accessKeyId=$AWS_ACCESS_KEY_ID -Daws.secretKey=$AWS_SECRET_ACCESS_KEY -Xmx500m -jar /usr/local/cantaloupe/Cantaloupe-$CANTALOUPE_VERSION.war"]
+CMD ["sh", "-c", "/usr/local/startup.sh"]
