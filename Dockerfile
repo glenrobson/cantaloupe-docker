@@ -4,16 +4,17 @@ FROM mostalive/ubuntu-14.04-oracle-jdk8
 # https://github.com/kaij/cantaloupe
 # https://github.com/MITLibraries/docker-cantaloupe
 
-ENV CANTALOUPE_VERSION 3.4.1
+ENV CANTALOUPE_VERSION 4.0.3
+ENV OPENJPG_VERSION 2.3.0
 EXPOSE 8182
 
 # Update packages and install tools
 RUN apt-get update -y && apt-get install -y wget unzip graphicsmagick curl build-essential cmake
 
 #Build OpenJPEG
-RUN wget -c https://github.com/uclouvain/openjpeg/archive/v2.3.0.tar.gz -O openjpeg-2.3.0.tar.gz \
-     && tar -zxvf openjpeg-2.3.0.tar.gz \
-     && cd openjpeg-2.3.0 \
+RUN wget -c https://github.com/uclouvain/openjpeg/archive/v$OPENJPG_VERSION.tar.gz -O openjpeg-$OPENJPG_VERSION.tar.gz \
+     && tar -zxvf openjpeg-$OPENJPG_VERSION.tar.gz \
+     && cd openjpeg-$OPENJPG_VERSION \
      && mkdir -v build \
      && cd build \
      && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .. \
@@ -31,9 +32,11 @@ RUN curl -OL https://github.com/medusa-project/cantaloupe/releases/download/v$CA
  && mkdir -p /usr/local/ \
  && cd /usr/local \
  && unzip /tmp/Cantaloupe-$CANTALOUPE_VERSION.zip \
- && ln -s Cantaloupe-$CANTALOUPE_VERSION cantaloupe \
+ && ln -s cantaloupe-$CANTALOUPE_VERSION cantaloupe \
  && rm -rf /tmp/Cantaloupe-$CANTALOUPE_VERSION \
  && rm /tmp/Cantaloupe-$CANTALOUPE_VERSION.zip
+
+RUN cp /usr/local/cantaloupe/deps/Linux-x86-64/lib/* /usr/lib 
 
 COPY cantaloupe.properties /etc/cantaloupe.properties
 RUN mkdir -p /var/log/cantaloupe \
@@ -55,6 +58,7 @@ RUN export CANTALOUPE_VERSION=$CANTALOUPE_VERSION
 RUN chmod 755 /usr/local/startup.sh
 
 RUN echo 'cantaloupe ALL=(ALL) NOPASSWD: /usr/sbin/cron' >> /etc/sudoers
+RUN echo 'cantaloupe ALL=(ALL) NOPASSWD: /bin/sed' >> /etc/sudoers
 
 USER cantaloupe
 CMD ["sh", "-c", "/usr/local/startup.sh"]
