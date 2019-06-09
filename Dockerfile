@@ -4,7 +4,7 @@ FROM mostalive/ubuntu-14.04-oracle-jdk8
 # https://github.com/kaij/cantaloupe
 # https://github.com/MITLibraries/docker-cantaloupe
 
-ENV CANTALOUPE_VERSION 4.0.3
+ENV CANTALOUPE_VERSION 4.1.2
 ENV OPENJPG_VERSION 2.3.0
 EXPOSE 8182
 
